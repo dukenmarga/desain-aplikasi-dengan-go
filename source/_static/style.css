@@ -42,3 +42,9 @@ h5 {
 h6 {
     font-size: 0.67em;
 }
+
+span.pre {
+    font-weight: 600;
+    font-style: normal;
+    color: #CB0404;
+}
