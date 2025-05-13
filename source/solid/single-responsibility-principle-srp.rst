@@ -293,8 +293,6 @@ selain bisa menyimpan ke file CSV dan database, dibutuhkan juga penyimpanan ke *
     type CSVFileSaver struct{}
     type DBSaver struct{}
     type S3Saver struct{}
-    type JSONFileSaver struct{}
-    // ... struct lainnya sesuai kebutuhan
 
     // Implementasi Save() untuk masing-masing struct di atas pada interface Saver
     func (fs CSVFileSaver) Save(r *Report) error {
@@ -306,7 +304,6 @@ selain bisa menyimpan ke file CSV dan database, dibutuhkan juga penyimpanan ke *
     func (ds S3Saver) Save(r *Report) error {
         return SaveToS3(r)
     }
-    // ... implementasi struct lainnya
 
     func (r *Report) Format() string {
         return fmt.Sprintf("%s,%s", r.Title, r.Content)
@@ -329,7 +326,7 @@ selain bisa menyimpan ke file CSV dan database, dibutuhkan juga penyimpanan ke *
         ...
         return nil
     }
-    // ... fungsi lainnya SaveToS3(), SaveToJSON, dll.
+    // ... fungsi lainnya SaveToS3()
 
     func SaveReport(s Saver, r *Report) error {
         return s.Save(r)
@@ -348,8 +345,14 @@ selain bisa menyimpan ke file CSV dan database, dibutuhkan juga penyimpanan ke *
 Dengan menggunakan ``interface``, fungsi :func:`SaveReport` kini hanya perlu memanggil
 fungsi :func:`Save` sebagai logika orkestrasinya tanpa membutuhkan logika percabangan.
 Koordinasi kode menjadi lebih sederhana dan bisa mengadaptasi berbagai kebutuhan
-implementasi lainnya di kemudian hari dengan menambahkan implementasi baru
-tanpa perlu mengubah fungsi yang sudah ada.
+implementasi lainnya di kemudian hari.
+
+Pola desain di bagian ini dengan menggunakan ``interface`` dikenal juga sebagai
+**Adapter Pattern**, di mana ``interface`` digunakan untuk mengikat 2 atau lebih
+implementasi suatu fungsi pada ``struct``. Di dalam bahasa Go, ikatan ini bersifat
+implisit tanpa perlu kode tambahan dan *compiler* akan mendeteksinya secara otomatis.
+Penggunaan ``interface`` untuk menyelesaikan isu yang ada, juga akan dibahas
+pada Open-Closed Principle.
 
 Catatan tambahan untuk potongan kode di atas, ``outputTarget`` diset secara statis, namun
 dalam implementasinya, ``outputTarget`` bisa diset secara dinamis sesuai kebutuhan.
